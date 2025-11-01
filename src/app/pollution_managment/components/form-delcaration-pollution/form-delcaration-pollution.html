@@ -14,16 +14,15 @@
 
     <div>
       <label for="type">Type:</label>
-      <select id="type" formControlName="type">
-        <option value="">--Select Type--</option>
+      <select id="type" formControlName="type_pollution">
         <option value="Plastique">Plastique</option>
         <option value="Chimique">Chimique</option>
         <option value="Dépôt sauvage">Dépôt sauvage</option>
         <option value="Eau">Eau</option>
         <option value="Air">Air</option>
-        <option value="Air">Autre</option>
+        <option value="Autre">Autre</option>
       </select>
-      @if (pollutionForm.get('type')?.invalid)
+      @if (pollutionForm.get('type_pollution')?.invalid)
       {
         <p class="error">Sélectionnez un type.</p>
       }
@@ -40,8 +39,8 @@
 
     <div>
       <label for="date">Date:</label>
-      <input id="date" type="date" formControlName="date">
-      @if (pollutionForm.get('date')?.invalid)
+      <input id="date" type="date" formControlName="date_observation">
+      @if (pollutionForm.get('date_observation')?.invalid)
       {
         <p class="error">La date est invalide.</p>
       }

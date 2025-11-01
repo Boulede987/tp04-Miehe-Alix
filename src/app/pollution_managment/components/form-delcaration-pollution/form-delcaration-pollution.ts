@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SubmittedPollution } from '../../classes/submittedPollution/submitted-pollution';
 import { PollutionRecap } from '../pollution-recap/pollution-recap';
 import { PollutionAPI } from '../../services/pollution-api';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-form-delcaration-pollution',
@@ -23,9 +24,9 @@ export class FormDelcarationPollution implements OnInit {
     // Validators.required -> oblige re remplir le formulaire, d'une certaine manière
     // le bouton submt n'est pas utilisable tant que ce n'est pas valide
     titre: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    type: new FormControl('', [Validators.required]),
+    type_pollution: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required, Validators.minLength(10)]),
-    date: new FormControl('', [Validators.required]),
+    date_observation: new FormControl('', [Validators.required]),
     lieu: new FormControl('', [Validators.required]),
     longitude: new FormControl('', [Validators.required, Validators.min(-180), Validators.max(180)]),
     latitude: new FormControl('', [Validators.required, Validators.min(-90), Validators.max(90)]),
@@ -37,7 +38,8 @@ export class FormDelcarationPollution implements OnInit {
   (
     private pollutionApi : PollutionAPI,
     private route : ActivatedRoute,
-    private router : Router
+    private router : Router,
+    private cdr: ChangeDetectorRef 
   ) 
   {
     //
@@ -68,9 +70,9 @@ export class FormDelcarationPollution implements OnInit {
           {
             id: this.pollution.id.toString(),
             titre: this.pollution.titre,
-            type: this.pollution.type_pollution ,
+            type_pollution: this.pollution.type_pollution,
             description: this.pollution.description,
-            date: this.pollution.date_observation.toString(),
+            date_observation: this.pollution.date_observation.toString(),
             lieu: this.pollution.lieu,
             longitude: this.pollution.longitude.toString(),
             latitude: this.pollution.latitude.toString(),
@@ -92,10 +94,15 @@ export class FormDelcarationPollution implements OnInit {
     
     if (this.isEditMode && this.pollution) // si on est en mode edition
     {
+      // Récupérer l'ID depuis l'URL (pas depuis le formulaire)
+      const pollutionId = parseInt(this.route.snapshot.paramMap.get('id')!);
+      this.pollution.id = pollutionId; 
+      
       this.pollutionApi.putPollution(this.pollution).subscribe({
         next: (response) => {
           console.log('Pollution updated:', response);
           this.submitted = true;
+          this.cdr.detectChanges(); // détection des changements pour que submitted mette à jour l'affichage
         },
         error: (error) => {
           console.error('Error updating pollution:', error);

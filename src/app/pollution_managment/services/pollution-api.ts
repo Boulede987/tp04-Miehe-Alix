@@ -53,7 +53,7 @@ export class PollutionAPI {
 
   public putPollution (pollution : SubmittedPollution) : Observable<SubmittedPollution> 
   {
-    return this.http.put<SubmittedPollution>(environment.listPollution, pollution)
+    return this.http.put<SubmittedPollution>(`${environment.listPollution}/${pollution.id}`, pollution)
   }
 
 
