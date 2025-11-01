@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Navbar } from './navbar';
+import { FormCreateUser } from './form-create-user';
 
-describe('Navbar', () => {
-  let component: Navbar;
-  let fixture: ComponentFixture<Navbar>;
+describe('FormCreateUser', () => {
+  let component: FormCreateUser;
+  let fixture: ComponentFixture<FormCreateUser>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Navbar]
+      imports: [FormCreateUser]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Navbar);
+    fixture = TestBed.createComponent(FormCreateUser);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -25,7 +25,6 @@ export class ListPollutions implements OnInit {
   typeFilter = new FormControl('')
 
   showForm : boolean = false // pour permette l'édition via formulaire
-  selectedPollution ! : SubmittedPollution
 
   constructor
   (
@@ -63,7 +62,7 @@ export class ListPollutions implements OnInit {
 
 
   onEdit(pollution: SubmittedPollution) {
-    this.router.navigate(['/declare-pollution/edit', pollution.id]);
+    this.router.navigate(['/pollution/edit', pollution.id]);
   }
 
 

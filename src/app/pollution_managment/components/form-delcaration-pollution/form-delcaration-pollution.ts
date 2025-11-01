@@ -1,11 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { SubmittedPollution } from '../../classes/submittedPollution/submitted-pollution';
 import { PollutionRecap } from '../pollution-recap/pollution-recap';
 import { PollutionAPI } from '../../services/pollution-api';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-form-delcaration-pollution',
@@ -116,6 +115,7 @@ export class FormDelcarationPollution implements OnInit {
         next: (response) => {
           console.log('Pollution created:', response);
           this.submitted = true;
+          this.cdr.detectChanges(); // détection des changements pour que submitted mette à jour l'affichage
         },
         error: (error) => {
           console.error('Error creating pollution:', error);
