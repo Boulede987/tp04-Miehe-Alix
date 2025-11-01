@@ -10,5 +10,5 @@ import { UserNavbar } from './user_managment';
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('TP03-Alix-MIEHE');
+  protected readonly title = signal('TP04-Alix-MIEHE');
 }

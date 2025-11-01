@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "TP03-Alix-MIEHE": {
+    "TP04-Alix-MIEHE": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -60,10 +60,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "TP03-Alix-MIEHE:build:production"
+              "buildTarget": "TP04-Alix-MIEHE:build:production"
             },
             "development": {
-              "buildTarget": "TP03-Alix-MIEHE:build:development"
+              "buildTarget": "TP04-Alix-MIEHE:build:development"
             }
           },
           "defaultConfiguration": "development"
