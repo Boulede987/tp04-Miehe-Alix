@@ -1,0 +1,27 @@
+<input type="text" [formControl]="searchFilter" placeholder="Rechercher..." />
+<select [formControl]="typeFilter">
+    <option value="">Tous les types</option>
+    <option value="Air">Air</option>
+    <option value="Eau">Eau</option>
+    <option value="Plastique">Plastique</option>
+    <option value="Chimique">Chimique</option>
+    <option value="Dépôt sauvage">Dépôt sauvage</option>
+</select>
+
+@for (pollution of (filteredPollutions$ | async); track submittedPollutions$) 
+{
+    <app-pollution-recap [pollution]="pollution"></app-pollution-recap>
+    
+    <button (click)="onDelete(pollution)">
+    <!-- <button> -->
+        Supprimer
+    </button>
+    <button (click)="onEdit(pollution)">
+    <!-- <button> -->
+        Modifier
+    </button>
+}
+@empty
+{
+    <p>Aucune pollutions trouvées!</p>
+}
