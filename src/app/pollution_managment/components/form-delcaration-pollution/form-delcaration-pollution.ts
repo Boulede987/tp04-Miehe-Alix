@@ -74,7 +74,7 @@ export class FormDelcarationPollution implements OnInit {
             lieu: this.pollution.lieu,
             longitude: this.pollution.longitude.toString(),
             latitude: this.pollution.latitude.toString(),
-            photo: this.pollution.photo
+            photo: this.pollution.photo_url
           };
 
           this.pollutionForm.patchValue(formValue); // et on les ajoutes dans le formulaire pour le pré remplir
@@ -89,20 +89,41 @@ export class FormDelcarationPollution implements OnInit {
   onSubmit()
   {
     this.pollution = Object.assign(new SubmittedPollution(), this.pollutionForm.value)
-    this.pollution.id = Math.random()
-
+    
     if (this.isEditMode && this.pollution) // si on est en mode edition
     {
-      this.pollutionApi.putPollution(this.pollution) // on modifie via un put
+      this.pollutionApi.putPollution(this.pollution).subscribe({
+        next: (response) => {
+          console.log('Pollution updated:', response);
+          this.submitted = true;
+        },
+        error: (error) => {
+          console.error('Error updating pollution:', error);
+        }
+      });
     }
     else  // sinon, on est en creation
     {
-      this.pollutionApi.postPollution(this.pollution) // sinon, c'est une creation
+      // Ne pas générer l'ID manuellement, laissez la base de données le faire (autoIncrement)
+      this.pollutionApi.postPollution(this.pollution).subscribe({
+        next: (response) => {
+          console.log('Pollution created:', response);
+          this.submitted = true;
+        },
+        error: (error) => {
+          console.error('Error creating pollution:', error);
+        }
+      });
     }
-
-    this.submitted = true // submitted est utilisé pour l'affichage
   }
 
+
+
+
+
+
+
+  
   cancel() {
     this.router.navigate(['/']);
   }

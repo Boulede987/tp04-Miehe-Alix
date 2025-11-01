@@ -22,11 +22,11 @@
     <p><strong>Longitude:</strong> {{ pollution.longitude }}</p>
     <p><strong>Latitude:</strong> {{ pollution.latitude }}</p>
 
-    @if (pollution.photo) 
+    @if (pollution.photo_url) 
     {
       <div class="photo">
         <strong>Photo:</strong><br>
-        <img [src]="pollution.photo" alt="Pollution Photo" width="300">
+        <img [src]="pollution.photo_url" alt="Pollution Photo" width="300">
       </div>
     }
   }
