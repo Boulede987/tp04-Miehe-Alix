@@ -18,6 +18,7 @@ export class FormDelcarationPollution implements OnInit {
 
   submitted : boolean = false
   isEditMode : boolean = false
+  loading : boolean = false
   
   pollutionForm = new FormGroup({
     // Validators.required -> oblige re remplir le formulaire, d'une certaine manière
@@ -89,38 +90,46 @@ export class FormDelcarationPollution implements OnInit {
 
   onSubmit()
   {
-    this.pollution = Object.assign(new SubmittedPollution(), this.pollutionForm.value)
+    if (!this.loading)
+    {
+      this.loading = true
+      this.pollution = Object.assign(new SubmittedPollution(), this.pollutionForm.value)
     
-    if (this.isEditMode && this.pollution) // si on est en mode edition
-    {
-      // Récupérer l'ID depuis l'URL (pas depuis le formulaire)
-      const pollutionId = parseInt(this.route.snapshot.paramMap.get('id')!);
-      this.pollution.id = pollutionId; 
-      
-      this.pollutionApi.putPollution(this.pollution).subscribe({
-        next: (response) => {
-          console.log('Pollution updated:', response);
-          this.submitted = true;
-          this.cdr.detectChanges(); // détection des changements pour que submitted mette à jour l'affichage
-        },
-        error: (error) => {
-          console.error('Error updating pollution:', error);
-        }
-      });
-    }
-    else  // sinon, on est en creation
-    {
-      // Ne pas générer l'ID manuellement, laissez la base de données le faire (autoIncrement)
-      this.pollutionApi.postPollution(this.pollution).subscribe({
-        next: (response) => {
-          console.log('Pollution created:', response);
-          this.submitted = true;
-          this.cdr.detectChanges(); // détection des changements pour que submitted mette à jour l'affichage
-        },
-        error: (error) => {
-          console.error('Error creating pollution:', error);
-        }
-      });
+      if (this.isEditMode && this.pollution) // si on est en mode edition
+      {
+        // Récupérer l'ID depuis l'URL (pas depuis le formulaire)
+        const pollutionId = parseInt(this.route.snapshot.paramMap.get('id')!);
+        this.pollution.id = pollutionId; 
+        
+        this.pollutionApi.putPollution(this.pollution).subscribe({
+          next: (response) => {
+            console.log('Pollution updated:', response);
+            this.submitted = true;
+            this.cdr.detectChanges(); // détection des changements pour que submitted mette à jour l'affichage
+            this.loading = false
+          },
+          error: (error) => {
+            console.error('Error updating pollution:', error)
+            this.loading = false
+          }
+        });
+      }
+      else  // sinon, on est en creation
+      {
+        // Ne pas générer l'ID manuellement, laissez la base de données le faire (autoIncrement)
+        this.pollutionApi.postPollution(this.pollution).subscribe({
+          next: (response) => {
+            console.log('Pollution created:', response);
+            this.submitted = true;
+            this.cdr.detectChanges(); // détection des changements pour que submitted mette à jour l'affichage
+            this.loading = false
+          },
+          error: (error) => {
+            console.error('Error creating pollution:', error)
+            this.loading = false
+          }
+        });
+      }
     }
   }
 

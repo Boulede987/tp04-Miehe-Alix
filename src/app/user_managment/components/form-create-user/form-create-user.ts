@@ -6,6 +6,17 @@ import { User } from '../../classes/user/user';
 import { UserApi } from '../../services/userApi/user-api';
 import { UserRecap } from '../user-recap/user-recap';
 
+
+// pour un validateur qui fonctionne
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+
+export function strictEmailValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(control.value) ? null : { emailInvalid: true };
+}
+
 @Component({
   selector: 'app-form-create-user',
   imports: [ReactiveFormsModule, UserRecap],
@@ -17,11 +28,12 @@ export class FormCreateUser implements OnInit
   user ? : User
 
   submitted : boolean = false
+  loading : boolean = false
   // // isEditMode : boolean = false
   
   userForm = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [Validators.required, strictEmailValidator]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     role: new FormControl('user', [Validators.required])
   });
@@ -84,40 +96,49 @@ export class FormCreateUser implements OnInit
 
   onSubmit()
   {
-    this.user = Object.assign(new User(), this.userForm.value)
+    if (!this.loading)
+    {
+
+      this.loading = true;
+      this.user = Object.assign(new User(), this.userForm.value)
     
-    // util quand on auras le mode edition
-    // // if (this.isEditMode && this.user) // si on est en mode edition
-    // // {
-    // //   // Récupérer l'ID depuis l'URL (pas depuis le formulaire)
-    // //   const userId = parseInt(this.route.snapshot.paramMap.get('id')!);
-    // //   this.user.id = userId; 
-      
-    // //   this.userApi.putUser(this.user).subscribe({
-    // //     next: (response) => {
-    // //       console.log('User updated:', response);
-    // //       this.submitted = true;
-    // //       this.cdr.detectChanges(); // détection des changements pour que submitted mette à jour l'affichage
-    // //     },
-    // //     error: (error) => {
-    // //       console.error('Error updating user:', error);
-    // //     }
-    // //   });
-    // // }
-    // // else  // sinon, on est en creation
-    // // {
-      // Ne pas générer l'ID manuellement, laissez la base de données le faire (autoIncrement)
-      this.userApi.postUser(this.user).subscribe({
-        next: (response) => {
-          console.log('User created:', response);
-          this.submitted = true;
-          this.cdr.detectChanges(); // détection des changements pour que submitted mette à jour l'affichage
-        },
-        error: (error) => {
-          console.error('Error creating user:', error);
-        }
-      });
-    // // }
+      // util quand on auras le mode edition
+      // // if (this.isEditMode && this.user) // si on est en mode edition
+      // // {
+      // //   // Récupérer l'ID depuis l'URL (pas depuis le formulaire)
+      // //   const userId = parseInt(this.route.snapshot.paramMap.get('id')!);
+      // //   this.user.id = userId; 
+        
+      // //   this.userApi.putUser(this.user).subscribe({
+      // //     next: (response) => {
+      // //       console.log('User updated:', response);
+      // //       this.submitted = true;
+      // //       this.cdr.detectChanges(); // détection des changements pour que submitted mette à jour l'affichage
+      // //       this.loading = false
+      // //     },
+      // //     error: (error) => {
+      // //       console.error('Error updating user:', error)
+      // //       this.loading = false
+      // //     }
+      // //   });
+      // // }
+      // // else  // sinon, on est en creation
+      // // {
+      // // // Ne pas générer l'ID manuellement, laissez la base de données le faire (autoIncrement)
+        this.userApi.postUser(this.user).subscribe({
+          next: (response) => {
+            console.log('User created:', response);
+            this.submitted = true;
+            this.cdr.detectChanges(); // détection des changements pour que submitted mette à jour l'affichage
+            this.loading = false;
+          },
+          error: (error) => {
+            console.error('Error creating user:', error);
+            this.loading = false;
+          }
+        });
+      // // }
+    }
   }
 
 
