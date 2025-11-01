@@ -15,9 +15,9 @@
   <!-- Si c'est un recap, on veux les details. Sinon, on laisse l'utilisateur choisir de l'afficher ou non -->
   @if (isRecap || showDetail)
   {
-    <p><strong>Type:</strong> {{ pollution.type }}</p>
+    <p><strong>Type:</strong> {{ pollution.type_pollution  }}</p>
     <p><strong>Description:</strong> {{ pollution.description }}</p>
-    <p><strong>Date:</strong> {{ pollution.date | date:'mediumDate' }}</p>
+    <p><strong>Date:</strong> {{ pollution.date_observation | date:'mediumDate' }}</p>
     <p><strong>Lieu:</strong> {{ pollution.lieu }}</p>
     <p><strong>Longitude:</strong> {{ pollution.longitude }}</p>
     <p><strong>Latitude:</strong> {{ pollution.latitude }}</p>

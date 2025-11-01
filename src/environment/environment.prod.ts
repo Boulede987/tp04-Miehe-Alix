@@ -1,4 +1,7 @@
+const backendClient = 'https://templateweb-miehe-alix-latest.onrender.com';
+
 export const environment = {
-  production: true,
-  backendClient : '/assets/mock/submitted-pollution.json'
+  production: false,
+  backendClient: backendClient,
+  listPollution: backendClient + '/api/pollution'
 };

@@ -1,4 +1,7 @@
+const backendClient = 'http://localhost:443';
+
 export const environment = {
   production: false,
-  backendClient : 'assets/mock/submitted-pollution.json'
+  backendClient: backendClient,
+  listPollution: backendClient + '/api/pollution'
 };

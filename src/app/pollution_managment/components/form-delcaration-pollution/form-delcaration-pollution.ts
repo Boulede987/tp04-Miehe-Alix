@@ -50,29 +50,36 @@ export class FormDelcarationPollution implements OnInit {
     // On verifie si on as un id dans l'url
     const pollutionId : number = parseInt(this.route.snapshot.paramMap.get('id')!)
     
-    if (pollutionId) {
+    if (pollutionId) 
+    {
 
       // si on en as un, on est en mode edition
       this.isEditMode = true;
 
-      this.pollutionApi.getPollutionById(pollutionId).subscribe(foundPollution => {
-        this.pollution = foundPollution;
+      this.pollutionApi.getPollutionById(pollutionId)
+      .subscribe(
+        foundPollution => 
+        {
 
-        // on récupère les données de l'objet pollution
-        const formValue = {
-          id: this.pollution.id.toString(),
-          titre: this.pollution.titre,
-          type: this.pollution.type,
-          description: this.pollution.description,
-          date: this.pollution.date.toString(),
-          lieu: this.pollution.lieu,
-          longitude: this.pollution.longitude.toString(),
-          latitude: this.pollution.latitude.toString(),
-          photo: this.pollution.photo
-        };
+          this.pollution = foundPollution;
 
-        this.pollutionForm.patchValue(formValue); // et on les ajoutes dans le formulaire pour le pré remplir
-      });
+          // on récupère les données de l'objet pollution
+          const formValue = 
+          {
+            id: this.pollution.id.toString(),
+            titre: this.pollution.titre,
+            type: this.pollution.type_pollution ,
+            description: this.pollution.description,
+            date: this.pollution.date_observation.toString(),
+            lieu: this.pollution.lieu,
+            longitude: this.pollution.longitude.toString(),
+            latitude: this.pollution.latitude.toString(),
+            photo: this.pollution.photo
+          };
+
+          this.pollutionForm.patchValue(formValue); // et on les ajoutes dans le formulaire pour le pré remplir
+        }
+      );
     }
     // si on as pas d'id, on reste en mode creation (isEditMode reste a false)
 

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable, map } from 'rxjs';
 import { SubmittedPollution } from '../classes/submittedPollution/submitted-pollution';
-import { environment } from '../../environment/environment';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,28 +18,28 @@ export class PollutionAPI {
 
   public getPollutions () : Observable<SubmittedPollution[]> 
   {
-    return this.http.get<SubmittedPollution[]>(environment.backendClient)
+    return this.http.get<SubmittedPollution[]>(environment.listPollution)
   }
 
   public getPollutionById (id : number) : Observable<SubmittedPollution> 
   {
-
-    // return this.http.get<SubmittedPollution>(`${environment.backendClient}/${id}`)
+    // besoin de connaissance des routes qu'utilise l'api -> tight coupling
+    return this.http.get<SubmittedPollution>(`${environment.listPollution}/${id}`)
     // Parcequ'on utilise un .json, qui ne peut que récupérer des arrays, on filtre tout manuellement.
     // à modifier quand on as un api
-    return this.getPollutions()
-    .pipe(
-      map(
-        pollutions => 
-        {
-          const pollution = pollutions.find(p => p.id == id);
-          if (!pollution) {
-            throw new Error(`Pollution with id ${id} not found`);
-          }
-          return pollution;
-        }
-      )
-    )
+    // return this.getPollutions()
+    // .pipe(
+    //   map(
+    //     pollutions => 
+    //     {
+    //       const pollution = pollutions.find(p => p.id == id);
+    //       if (!pollution) {
+    //         throw new Error(`Pollution with id ${id} not found`);
+    //       }
+    //       return pollution;
+    //     }
+    //   )
+    // )
 
   }
 

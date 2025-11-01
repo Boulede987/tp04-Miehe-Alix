@@ -73,7 +73,7 @@ export class ListPollutions implements OnInit {
               (
                 !type  // si il n'y as pas de type recherché (not null => not false => true)
                 || // ou
-                pollution.type === type // si le type de la pollution correspond au type recherché
+                pollution.type_pollution === type // si le type de la pollution correspond au type recherché
               )
               
               return matchesSearch && matchesType
