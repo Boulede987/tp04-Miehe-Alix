@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms'; 
-import { Observable, combineLatest, map, startWith } from 'rxjs';
+import { Observable, combineLatest, map, startWith, Subject, switchMap } from 'rxjs';
 
 import { PollutionRecap } from '../pollution-recap/pollution-recap';
 import { PollutionAPI } from '../../services/pollution-api';
@@ -15,6 +15,8 @@ import { SubmittedPollution } from '../../classes/submittedPollution/submitted-p
   styleUrl: './list-pollutions.scss'
 })
 export class ListPollutions implements OnInit {
+
+  private refreshTrigger$ = new Subject<void>();
 
   submittedPollutions$ ? : Observable<SubmittedPollution[]>
   filteredPollutions$ ! : Observable<SubmittedPollution[]>
@@ -38,8 +40,42 @@ export class ListPollutions implements OnInit {
   ngOnInit() 
   {
 
-    this.submittedPollutions$ = this.pollutionApi.getPollutions()
+    this.loadPollutions()
 
+  }
+
+
+
+  onDelete(pollution: SubmittedPollution) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette pollution ?')) {
+      this.pollutionApi.deletePollution(pollution).subscribe({
+        next: (response) => {
+          console.log('Pollution deleted:', response);
+          // Rediriger ou rafraîchir la liste
+          this.refreshTrigger$.next(); 
+        },
+        error: (error) => {
+          console.error('Error deleting pollution:', error);
+        }
+      });
+    }
+  }
+
+
+  onEdit(pollution: SubmittedPollution) {
+    this.router.navigate(['/declare-pollution/edit', pollution.id]);
+  }
+
+
+
+
+  loadPollutions()
+  {
+    // this.submittedPollutions$ = this.pollutionApi.getPollutions()
+    this.submittedPollutions$ = this.refreshTrigger$.pipe(
+      startWith(undefined), // <- Charge au démarrage
+      switchMap(() => this.pollutionApi.getPollutions()) // <- Recharge à chaque émission
+    );
 
     // Combinaison du stream de données original aves les filters controls
     this.filteredPollutions$ = 
@@ -81,22 +117,6 @@ export class ListPollutions implements OnInit {
         }
       )
     );
-
-
-
-
-  }
-
-
-
-  onDelete(pollution: SubmittedPollution)
-  {
-    this.pollutionApi.deletePollution(pollution)
-  }
-
-
-  onEdit(pollution: SubmittedPollution) {
-    this.router.navigate(['/declare-pollution/edit', pollution.id]);
   }
 
 }

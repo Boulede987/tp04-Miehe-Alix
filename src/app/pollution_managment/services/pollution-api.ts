@@ -58,10 +58,9 @@ export class PollutionAPI {
 
 
 
-  public deletePollution (pollution : SubmittedPollution) 
+  public deletePollution(pollution: SubmittedPollution): Observable<SubmittedPollution>  
   {
-    this.http.delete(environment.listPollution, { body: pollution } )
-    console.log("Suppression de la pollution!\n  Angular ne permet pas la modification d'un asset mock .json.")
+    return this.http.delete<SubmittedPollution>(`${environment.listPollution}/${pollution.id}`);
   }
-
+  
 }
